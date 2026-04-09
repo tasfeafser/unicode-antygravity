@@ -46,13 +46,20 @@ export default function IDEPage() {
 
       const data = await res.json()
       
-      if (data.run.stderr) {
-        setOutput(`\x1b[31m${data.run.stderr}\x1b[0m`)
+      if (data && data.run) {
+        if (data.run.stderr) {
+          setOutput(`\x1b[31m${data.run.stderr}\x1b[0m`)
+        } else {
+          setOutput(data.run.stdout || '')
+        }
+      } else if (data && data.error) {
+        // Handle explicit error responses from the backend
+        setOutput(`\x1b[31mBackend Error: ${data.error}\x1b[0m`)
       } else {
-        setOutput(data.run.stdout)
+        setOutput(`\x1b[31mUnexpected response format from execution engine.\x1b[0m\n${JSON.stringify(data)}`)
       }
     } catch (error) {
-      setOutput('\x1b[31mError connecting to execution environment.\x1b[0m')
+      setOutput(`\x1b[31mError connecting to execution environment: ${String(error)}\x1b[0m`)
     } finally {
       setIsExecuting(false)
     }
