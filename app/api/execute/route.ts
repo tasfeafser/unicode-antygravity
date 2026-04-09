@@ -14,7 +14,9 @@ const LANGUAGE_VERSIONS = {
   javascript: '18.15.0',
   java: '15.0.2',
   cpp: '10.2.0',
-  rust: '1.68.2'
+  rust: '1.68.2',
+  sql: '3.36.0',
+  typescript: '5.0.3',
 }
 
 export async function POST(req: NextRequest) {
