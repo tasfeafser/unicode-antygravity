@@ -6,6 +6,7 @@ import { CodeEditor } from '@/components/ide/Editor'
 import { Terminal } from '@/components/ide/Terminal'
 import { Play, Save, Share, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { useLanguage } from '@/lib/i18n/useLanguage'
 
 const DEFAULT_CODE = `def fibonacci(n):
     """
@@ -20,6 +21,7 @@ for i in range(10):
     print(f"Fibonacci({i}) = {fibonacci(i)}")`
 
 export default function IDEPage() {
+  const { language: uiLang } = useLanguage()
   const [code, setCode] = useState(DEFAULT_CODE)
   const [language, setLanguage] = useState('python')
   const [output, setOutput] = useState('')
@@ -65,7 +67,9 @@ export default function IDEPage() {
             <ArrowLeft size={16} className="text-gray-400" />
           </Link>
           <div className="h-6 w-px bg-gray-800 mx-1" />
-          <h1 className="font-bold text-lg cursor-pointer hover:text-blue-400 transition-colors">Unicode IDE</h1>
+          <h1 className="font-bold text-lg cursor-pointer hover:text-blue-400 transition-colors">
+            {uiLang === 'en' ? 'Unicode IDE' : 'Unicode 集成开发环境'}
+          </h1>
           <div className="h-6 w-px bg-gray-700 mx-2" />
           <select 
             value={language}
@@ -81,17 +85,20 @@ export default function IDEPage() {
         
         <div className="flex items-center gap-3">
           <button className="flex items-center gap-2 px-3 py-1.5 hover:bg-gray-800 rounded transition-colors text-sm text-gray-300">
-            <Save size={16} /> Save
+            <Save size={16} /> {uiLang === 'en' ? 'Save' : '保存'}
           </button>
           <button className="flex items-center gap-2 px-3 py-1.5 hover:bg-gray-800 rounded transition-colors text-sm text-gray-300">
-            <Share size={16} /> Share
+            <Share size={16} /> {uiLang === 'en' ? 'Share' : '分享'}
           </button>
           <button 
             onClick={executeCode}
             disabled={isExecuting}
-            className="flex items-center gap-2 px-4 py-1.5 bg-green-600 hover:bg-green-700 text-white font-medium rounded transition-colors disabled:opacity-50 text-sm"
+            className="flex items-center gap-2 px-4 py-1.5 bg-green-600 hover:bg-green-700 text-white font-medium rounded transition-colors disabled:opacity-50 text-sm whitespace-nowrap"
           >
-            <Play size={16} fill="white" /> {isExecuting ? 'Running...' : 'Run Code'}
+            <Play size={16} fill="white" /> 
+            {isExecuting 
+              ? (uiLang === 'en' ? 'Running...' : '运行中...') 
+              : (uiLang === 'en' ? 'Run Code' : '运行代码')}
           </button>
         </div>
       </div>

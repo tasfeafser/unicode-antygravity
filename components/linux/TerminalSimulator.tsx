@@ -60,6 +60,7 @@ export function TerminalSimulator({ onCommandRun }: TerminalSimulatorProps) {
         setTimeout(() => {
           if (terminalRef.current?.offsetHeight && terminalRef.current?.offsetWidth) {
             fitAddon.fit()
+            term.focus() // Auto-focus ensures keystrokes are grabbed immediately
           }
         }, 100)
       } catch (err) {
@@ -85,18 +86,19 @@ export function TerminalSimulator({ onCommandRun }: TerminalSimulatorProps) {
       const printable = !domEvent.altKey && !domEvent.ctrlKey && !domEvent.metaKey
 
       if (domEvent.keyCode === 13) {
-        term.writeln('')
+        term.write('\r\n')
         if (state.input.trim()) {
           const result = state.parser!.execute(state.input)
           if (result.output) {
             if (result.error) term.write('\x1b[31m')
-            term.writeln(result.output)
+            term.write(result.output.replace(/\n/g, '\r\n') + '\r\n')
             if (result.error) term.write('\x1b[0m')
           }
           onCommandRun(state.input, result.output)
         }
         state.input = ''
         promptUser(term)
+
       } else if (domEvent.keyCode === 8) {
         if (state.input.length > 0) {
           state.input = state.input.substring(0, state.input.length - 1)

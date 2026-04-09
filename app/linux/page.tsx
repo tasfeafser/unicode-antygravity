@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { TerminalSimulator } from '@/components/linux/TerminalSimulator'
 import { Terminal, Shield, CheckCircle2, Circle, Lightbulb, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { useLanguage } from '@/lib/i18n/useLanguage'
 
 // Define progressive Linux exercises
 const EXERCISES = [
@@ -38,6 +39,7 @@ const EXERCISES = [
 ]
 
 export default function LinuxPage() {
+  const { language } = useLanguage()
   const [completedExercises, setCompletedExercises] = useState<number[]>([])
   const [activeHint, setActiveHint] = useState<number | null>(null)
 
@@ -64,16 +66,20 @@ export default function LinuxPage() {
             <Terminal className="text-orange-400" />
           </div>
           <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-400">
-            Linux Simulator
+            {language === 'en' ? 'Linux Simulator' : 'Linux 模拟器'}
           </h1>
         </div>
 
         <p className="text-slate-400 text-sm mb-8 leading-relaxed">
-          Welcome to the interactive Unicode OS terminal. Learn command-line fundamentals and basic cybersecurity networking safely in the browser.
+          {language === 'en' 
+            ? 'Welcome to the interactive Unicode OS terminal. Learn command-line fundamentals and basic cybersecurity networking safely in the browser.'
+            : '欢迎使用交互式 Unicode OS 终端。在浏览器中安全地学习命令行基础知识和基本网络安全侦察。'}
         </p>
 
         <div className="flex-1 space-y-6">
-          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Guided Modules</h2>
+          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">
+            {language === 'en' ? 'Guided Modules' : '指导模块'}
+          </h2>
           
           {EXERCISES.map((exercise, index) => {
             const isCompleted = completedExercises.includes(exercise.id)
@@ -129,8 +135,8 @@ export default function LinuxPage() {
         <div className="flex items-center justify-between mb-4 px-2">
           <div className="font-mono text-sm text-slate-400">root@unicode:~#</div>
           <div className="flex items-center gap-4 text-xs font-mono">
-            <span className="flex items-center gap-1 text-green-400"><Shield size={14} /> Safe Sandbox Active</span>
-            <span className="text-slate-500">Session ID: NX-8492</span>
+            <span className="flex items-center gap-1 text-green-400"><Shield size={14} /> {language === 'en' ? 'Safe Sandbox Active' : '安全沙盒已激活'}</span>
+            <span className="text-slate-500">{language === 'en' ? 'Session' : '会话'} ID: NX-8492</span>
           </div>
         </div>
         <div className="flex-1 min-h-0">

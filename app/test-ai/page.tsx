@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import { ArrowLeft, Send, SquareTerminal, Image as ImageIcon, Sparkles, MessageSquare, Plus } from 'lucide-react'
+import { useState, useRef, useEffect, ChangeEvent } from 'react'
+import { ArrowLeft, Send, SquareTerminal, Image as ImageIcon, Sparkles, MessageSquare, Plus, X, Settings2 } from 'lucide-react'
 import Link from 'next/link'
 import { useUser } from '@clerk/nextjs'
 import ReactMarkdown from 'react-markdown'
@@ -18,6 +18,11 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [selectedModel, setSelectedModel] = useState('unicode-default')
+  const [customKey, setCustomKey] = useState('1e988d608b682e57ccf1efdd4f61ddf6')
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null)
+  const [showSettings, setShowSettings] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
@@ -28,11 +33,23 @@ export default function ChatPage() {
     scrollToBottom()
   }, [messages])
 
+  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (event) => setUploadedImage(event.target?.result as string)
+    reader.readAsDataURL(file)
+  }
+
   const handleSend = async (e?: React.FormEvent) => {
     e?.preventDefault()
-    if (!input.trim() || isLoading) return
+    if (!input.trim() && !uploadedImage || isLoading) return
 
     const userMsg: Message = { id: Date.now().toString(), role: 'user', content: input.trim() }
+    
+    // We append [Image Attached] as a visual queue for the user if an image was uploaded
+    if (uploadedImage) userMsg.content = '[Image Attached] ' + userMsg.content
+
     setMessages(prev => [...prev, userMsg])
     setInput('')
     setIsLoading(true)
@@ -48,9 +65,14 @@ export default function ChatPage() {
         body: JSON.stringify({
           messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })),
           context: { skillLevel: 'beginner', topic: 'general' },
+          imagePayload: uploadedImage,
+          modelId: selectedModel,
+          apiKey: customKey,
           stream: true
         })
       })
+
+      setUploadedImage(null) // clear image after sending
 
       if (!response.body) throw new Error('No response body')
       
@@ -185,18 +207,81 @@ export default function ChatPage() {
         {/* Input Dock */}
         <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-[#0A0A0B] via-[#0A0A0B] to-transparent pt-10 pb-6 px-4">
           <div className="max-w-3xl mx-auto relative group">
+            {/* Model & API Setup bar */}
+            {showSettings && (
+              <div className="absolute bottom-[100%] mb-2 left-0 w-full p-3 rounded-2xl bg-[#111] border border-white/10 shadow-2xl flex flex-col gap-3 animate-fade-in-up">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-semibold text-gray-300">AI Model Setup</span>
+                  <button onClick={() => setShowSettings(false)} className="text-gray-500 hover:text-white"><X size={16}/></button>
+                </div>
+                <div className="flex gap-2">
+                  <select 
+                    value={selectedModel} 
+                    onChange={e => setSelectedModel(e.target.value)}
+                    className="flex-1 bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-gray-300 focus:outline-none"
+                  >
+                    <option value="unicode-default">Unicode Default (Groq)</option>
+                    <option value="gemini-vision">Gemini 1.5 Vision</option>
+                    <option value="custom-api">Custom OCR / External API</option>
+                  </select>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs text-gray-500">Provided API Key</label>
+                  <input 
+                    type="text" 
+                    value={customKey}
+                    onChange={e => setCustomKey(e.target.value)}
+                    placeholder="Enter API Key"
+                    className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-gray-300 focus:outline-none font-mono"
+                  />
+                </div>
+              </div>
+            )}
+
             <form 
               onSubmit={handleSend}
-              className="relative bg-[#18181B] border border-white/10 focus-within:border-purple-500/50 focus-within:ring-1 focus-within:ring-purple-500/50 rounded-2xl flex items-end shadow-2xl transition-all"
+              className="relative bg-[#18181B] border border-white/10 focus-within:border-purple-500/50 focus-within:ring-1 focus-within:ring-purple-500/50 rounded-2xl flex flex-col shadow-2xl transition-all"
             >
-              <div className="p-3 flex items-center gap-2">
-                <button type="button" className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors">
-                  <ImageIcon size={20} />
-                </button>
-                <button type="button" className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors">
-                  <SquareTerminal size={20} />
-                </button>
-              </div>
+              {/* Image Preview Area */}
+              {uploadedImage && (
+                <div className="px-4 pt-4 pb-2 border-b border-white/5 relative">
+                  <div className="relative inline-block">
+                    <img src={uploadedImage} alt="Uploaded" className="h-16 w-16 object-cover rounded-lg border border-white/10" />
+                    <button 
+                      type="button"
+                      onClick={() => setUploadedImage(null)}
+                      className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg"
+                    >
+                      <X size={12} />
+                    </button>
+                  </div>
+                </div>
+              )}
+              
+              <div className="flex items-end w-full">
+                <div className="p-3 flex items-center gap-2">
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    ref={fileInputRef} 
+                    onChange={handleImageUpload} 
+                    className="hidden" 
+                  />
+                  <button 
+                    type="button" 
+                    onClick={() => fileInputRef.current?.click()}
+                    className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors shrink-0"
+                  >
+                    <ImageIcon size={20} />
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={() => setShowSettings(!showSettings)} 
+                    className={`p-2 rounded-xl transition-colors shrink-0 ${showSettings ? 'bg-purple-500/20 text-purple-400' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                  >
+                    <Settings2 size={20} />
+                  </button>
+                </div>
               <textarea
                 id="chat-input"
                 value={input}
@@ -214,11 +299,12 @@ export default function ChatPage() {
               <div className="p-3">
                 <button 
                   type="submit"
-                  disabled={!input.trim() || isLoading}
+                  disabled={!input.trim() && !uploadedImage || isLoading}
                   className="w-10 h-10 bg-white text-black rounded-xl flex items-center justify-center disabled:opacity-30 disabled:bg-gray-700 disabled:text-gray-400 transition-colors"
                 >
                   <Send size={18} />
                 </button>
+              </div>
               </div>
             </form>
             <div className="text-center mt-3 text-xs text-gray-500">

@@ -73,8 +73,19 @@ export function Terminal({ output, isExecuting }: TerminalProps) {
     return () => {
       clearTimeout(openTimeout)
       resizeObserver.disconnect()
-      term.dispose()
-      xtermRef.current = null
+      if (xtermRef.current) {
+        try {
+          xtermRef.current.dispose()
+        } catch (e) {
+          console.warn('Terminal disposal warning:', e)
+        }
+        xtermRef.current = null
+      } else {
+        // If it wasn't opened yet but created, we still dispose the local variable
+        try {
+          term.dispose()
+        } catch (e) {}
+      }
     }
   }, [])
 

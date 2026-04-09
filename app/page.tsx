@@ -6,26 +6,36 @@ import Link from 'next/link'
 import { 
   Terminal, Code2, Sparkles, BookOpen, ShieldAlert, 
   FileText, BrainCircuit, CreditCard, ChevronRight,
-  Layers, Cpu, Grid3X3, Gamepad2
+  Layers, Cpu, Grid3X3, Gamepad2, Languages
 } from 'lucide-react'
-
-const HERO_TEXTS = [
-  "Unicode acts as a co-pilot for someone diving into the deep end of Computer Science without a life jacket.",
-  "Master Linux, Cybersecurity, and Software Engineering in one unified Academic OS.",
-  "Bridge the gap from student to engineer with AI-guided walkthroughs and integrated tools.",
-  "The ultimate success engine for the next generation of Computer Science leaders."
-]
+import { translations, type Language } from '@/lib/i18n/translations'
 
 export default function Home() {
   const { isSignedIn, isLoaded } = useUser()
+  const [language, setLanguage] = useState<Language>('en')
+  const t = translations[language]
   const [heroIndex, setHeroIndex] = useState(0)
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setHeroIndex((prev) => (prev + 1) % HERO_TEXTS.length)
-    }, 2000)
-    return () => clearInterval(interval)
+    // Attempt to detect browser language or use saved preference
+    const savedLang = localStorage.getItem('unicode-lang') as Language
+    if (savedLang && ['en', 'zh'].includes(savedLang)) {
+      setLanguage(savedLang)
+    }
   }, [])
+
+  const toggleLanguage = () => {
+    const newLang = language === 'en' ? 'zh' : 'en'
+    setLanguage(newLang)
+    localStorage.setItem('unicode-lang', newLang)
+  }
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHeroIndex((prev) => (prev + 1) % t.hero.descriptions.length)
+    }, 3000) // Slightly slower for better readability
+    return () => clearInterval(interval)
+  }, [t.hero.descriptions.length])
 
   return (
     <main className="min-h-screen relative overflow-x-hidden bg-[#0A0A0B] text-white selection:bg-purple-500/30">
@@ -42,10 +52,17 @@ export default function Home() {
         </div>
         
         <div className="flex items-center gap-6">
-          <Link href="/vision" className="text-sm text-gray-400 hover:text-white transition-colors">Our Vision</Link>
+          <Link href="/vision" className="text-sm text-gray-400 hover:text-white transition-colors">{t.nav.vision}</Link>
           <Link href="/pricing" className="flex items-center gap-2 text-sm text-gray-300 hover:text-white transition-colors bg-white/5 px-4 py-2 rounded-lg border border-white/10 hover:bg-white/10 backdrop-blur-sm">
-            <CreditCard size={16} /> Subscription
+            <CreditCard size={16} /> {t.nav.pricing}
           </Link>
+
+          <button 
+            onClick={toggleLanguage}
+            className="flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300 transition-colors bg-purple-500/10 px-3 py-2 rounded-lg border border-purple-500/20 font-mono"
+          >
+            <Languages size={16} /> {t.nav.languageToggle}
+          </button>
           
           {!isLoaded ? (
             <div className="w-20 h-10 bg-white/5 animate-pulse rounded-lg" />
@@ -72,15 +89,15 @@ export default function Home() {
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-20 pb-32">
         <div className="max-w-3xl mb-20 animate-fade-in-up">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-sm font-medium mb-6">
-            <Sparkles size={14} /> Unified Academic OS
+            <Sparkles size={14} /> {t.hero.badges[0]}
           </div>
           <h1 className="text-5xl md:text-7xl font-bold leading-tight tracking-tight mb-8">
-            From "Hello World"<br/>
-            <span className="text-gray-500">to Software Engineer.</span>
+            {t.hero.titlePrefix}<br/>
+            <span className="text-gray-500">{t.hero.titleSuffix}</span>
           </h1>
           <div className="h-20 sm:h-auto">
             <p className="text-xl text-gray-400 leading-relaxed mb-10 max-w-2xl transition-all duration-500 min-h-[60px]">
-              {HERO_TEXTS[heroIndex]}
+              {t.hero.descriptions[heroIndex]}
             </p>
           </div>
         </div>
@@ -95,8 +112,8 @@ export default function Home() {
                 <div className="w-12 h-12 bg-[#1e1e1e] rounded-lg flex items-center justify-center border border-gray-800 mb-6 group-hover:scale-110 transition-transform">
                   <Code2 className="text-green-400" />
                 </div>
-                <h3 className="font-mono font-semibold text-lg text-green-400 mb-2">{`{ In-Browser IDE }`}</h3>
-                <p className="text-sm text-gray-400 font-mono">Write, compile, and execute code directly. No local setup required.</p>
+                <h3 className="font-mono font-semibold text-lg text-green-400 mb-2">{t.features.ide.title}</h3>
+                <p className="text-sm text-gray-400 font-mono">{t.features.ide.desc}</p>
               </div>
             </div>
           </Link>
@@ -109,8 +126,8 @@ export default function Home() {
                 <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center border border-gray-800 mb-6 group-hover:scale-110 transition-transform">
                   <Terminal className="text-orange-400" />
                 </div>
-                <h3 className="font-mono font-semibold text-lg text-orange-400 mb-2">root@unicode:~#</h3>
-                <p className="text-sm text-gray-400 font-mono">A safe space to learn the command line without breaking your OS.</p>
+                <h3 className="font-mono font-semibold text-lg text-orange-400 mb-2">{t.features.linux.title}</h3>
+                <p className="text-sm text-gray-400 font-mono">{t.features.linux.desc}</p>
               </div>
             </div>
           </Link>
@@ -126,8 +143,8 @@ export default function Home() {
                 <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center border border-purple-500/30 mb-6 group-hover:scale-110 transition-transform">
                   <Sparkles className="text-purple-400" />
                 </div>
-                <h3 className="font-semibold text-xl text-white mb-2">AI Code Mentor</h3>
-                <p className="text-sm text-gray-300">Intelligent pair-programming powered by Groq and Gemini. Explains logic, debugging, and CS fundamentals.</p>
+                <h3 className="font-semibold text-xl text-white mb-2">{t.features.aiMentor.title}</h3>
+                <p className="text-sm text-gray-300">{t.features.aiMentor.desc}</p>
               </div>
             </div>
           </Link>
@@ -140,8 +157,8 @@ export default function Home() {
                 <div className="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center border border-red-500/20 mb-6 group-hover:scale-110 transition-transform">
                   <ShieldAlert className="text-red-400" />
                 </div>
-                <h3 className="font-semibold text-lg text-white mb-2">Cybersecurity Lab</h3>
-                <p className="text-sm text-gray-400">Practice ethical hacking and understand vulnerabilities safely.</p>
+                <h3 className="font-semibold text-lg text-white mb-2">{t.features.cyber.title}</h3>
+                <p className="text-sm text-gray-400">{t.features.cyber.desc}</p>
               </div>
             </div>
           </Link>
@@ -154,8 +171,8 @@ export default function Home() {
                 <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center border border-blue-500/20 mb-6 group-hover:scale-110 transition-transform">
                   <BookOpen className="text-blue-400" />
                 </div>
-                <h3 className="font-semibold text-lg text-white mb-2">Course Library</h3>
-                <p className="text-sm text-gray-400">Searchable vector-indexed CS courses with RAG comprehension.</p>
+                <h3 className="font-semibold text-lg text-white mb-2">{t.features.course.title}</h3>
+                <p className="text-sm text-gray-400">{t.features.course.desc}</p>
               </div>
             </div>
           </Link>
@@ -168,8 +185,8 @@ export default function Home() {
                 <div className="w-12 h-12 bg-cyan-500/10 rounded-lg flex items-center justify-center border border-cyan-500/20 mb-6 group-hover:scale-110 transition-transform">
                   <FileText className="text-cyan-400" />
                 </div>
-                <h3 className="font-semibold text-lg text-white mb-2">Docs & Slides</h3>
-                <p className="text-sm text-gray-400">Auto-generate professional documentation and presentations.</p>
+                <h3 className="font-semibold text-lg text-white mb-2">{t.features.docs.title}</h3>
+                <p className="text-sm text-gray-400">{t.features.docs.desc}</p>
               </div>
             </div>
           </Link>
@@ -182,8 +199,8 @@ export default function Home() {
                 <div className="w-12 h-12 bg-pink-500/10 rounded-lg flex items-center justify-center border border-pink-500/20 mb-6 group-hover:scale-110 transition-transform">
                   <BrainCircuit className="text-pink-400" />
                 </div>
-                <h3 className="font-semibold text-lg text-white mb-2">Academic Concierge</h3>
-                <p className="text-sm text-gray-400">Upload PDFs. The AI tracks syllabus and extracts pure knowledge.</p>
+                <h3 className="font-semibold text-lg text-white mb-2">{t.features.concierge.title}</h3>
+                <p className="text-sm text-gray-400">{t.features.concierge.desc}</p>
               </div>
             </div>
           </Link>
@@ -196,8 +213,8 @@ export default function Home() {
                 <div className="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center border border-purple-500/20 mb-6 group-hover:scale-110 transition-transform">
                   <Layers className="text-purple-400" />
                 </div>
-                <h3 className="font-semibold text-lg text-white mb-2">AppBuilder</h3>
-                <p className="text-sm text-gray-400">Build and deploy full-stack apps with AI assistance. Low-code to pro-code.</p>
+                <h3 className="font-semibold text-lg text-white mb-2">{t.features.appBuilder.title}</h3>
+                <p className="text-sm text-gray-400">{t.features.appBuilder.desc}</p>
               </div>
             </div>
           </Link>
@@ -210,8 +227,8 @@ export default function Home() {
                 <div className="w-12 h-12 bg-yellow-500/10 rounded-lg flex items-center justify-center border border-yellow-500/20 mb-6 group-hover:scale-110 transition-transform">
                   <Cpu className="text-yellow-400" />
                 </div>
-                <h3 className="font-semibold text-lg text-white mb-2">Electrical Engineering</h3>
-                <p className="text-sm text-gray-400">Advanced circuit simulation and logic design. Powered by withdiode.com.</p>
+                <h3 className="font-semibold text-lg text-white mb-2">{t.features.ee.title}</h3>
+                <p className="text-sm text-gray-400">{t.features.ee.desc}</p>
               </div>
             </div>
           </Link>
@@ -224,8 +241,8 @@ export default function Home() {
                 <div className="w-12 h-12 bg-indigo-500/10 rounded-lg flex items-center justify-center border border-indigo-500/20 mb-6 group-hover:scale-110 transition-transform">
                   <Grid3X3 className="text-indigo-400" />
                 </div>
-                <h3 className="font-semibold text-lg text-white mb-2">Arcstructure</h3>
-                <p className="text-sm text-gray-400">Complex software systems design. Mapping out the skeleton of your ideas.</p>
+                <h3 className="font-semibold text-lg text-white mb-2">{t.features.architecture.title}</h3>
+                <p className="text-sm text-gray-400">{t.features.architecture.desc}</p>
               </div>
             </div>
           </Link>
@@ -238,8 +255,8 @@ export default function Home() {
                 <div className="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center border border-emerald-500/20 mb-6 group-hover:scale-110 transition-transform">
                   <Gamepad2 className="text-emerald-400" />
                 </div>
-                <h3 className="font-semibold text-lg text-white mb-2">Unigame</h3>
-                <p className="text-sm text-gray-400">Create games from scratch with AI. Powered by Rosebud AI.</p>
+                <h3 className="font-semibold text-lg text-white mb-2">{t.features.unigame.title}</h3>
+                <p className="text-sm text-gray-400">{t.features.unigame.desc}</p>
               </div>
             </div>
           </Link>
@@ -251,7 +268,7 @@ export default function Home() {
             href="/vision" 
             className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 font-medium transition-colors group"
           >
-            Read our vision for the future of CS education
+            {t.footer.visionLink}
             <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>

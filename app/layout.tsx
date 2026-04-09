@@ -15,8 +15,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const BACKGROUND_TEXT_1 = "function init() { return true; } const x = 42; SELECT * FROM users; import { auth } from '@clerk/nextjs'; def fibonacci(n): if n<=1: return n else: return fibonacci(n-1)+fibonacci(n-2) ∑(n=1 to ∞) 1/n² = π²/6 ∫e^x dx = e^x + C O(N log N) ∀x ∈ ℝ, x² ≥ 0 ".repeat(3)
-  const BACKGROUND_TEXT_2 = "class Unicode { constructor() { this.active = true } } git commit -m 'initial commit' chmod 777 /var/www E = mc² ∇ × B = μ₀J + μ₀ε₀(∂E/∂t) { JSON: 'Data' } docker run -p 8080:80 nginx console.log('Hello World') ".repeat(3)
+  const BACKGROUND_TEXT_1 = "function init() { return true; } const x = 42; 逻辑 循环 函数 数据 SELECT * FROM users; import { auth } from '@clerk/nextjs'; 状态 变量 异步 并发 def fibonacci(n): ∑(n=1 to ∞) 1/n² = π²/6 ∫e^x dx = e^x + C O(N log N) ".repeat(3)
+  const BACKGROUND_TEXT_2 = "class Unicode { constructor() { this.active = true } } 算法 结构 系统 架构 git commit -m 'initial commit' chmod 777 /var/www E = mc² 🚀 💻 🌐 ∇ × B = μ₀J + μ₀ε₀(∂E/∂t) { JSON: 'Data' } ".repeat(3)
 
   return (
     <ClerkProvider>
