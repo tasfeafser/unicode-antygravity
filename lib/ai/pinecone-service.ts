@@ -7,7 +7,7 @@ const pinecone = new Pinecone({
 })
 
 // Types for our vectors
-export interface CourseVector extends RecordMetadata {
+export interface CourseVector extends Record<string, any> {
   type: 'course' | 'document' | 'code' | 'qa'
   title: string
   content: string
