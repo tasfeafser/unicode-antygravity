@@ -125,8 +125,16 @@ export function TerminalSimulator({ onCommandRun }: TerminalSimulatorProps) {
       clearTimeout(greetingTimeout)
       keyHandler.dispose()
       resizeObserver.disconnect()
-      term.dispose()
-      xtermRef.current = null
+      if (xtermRef.current) {
+        try {
+          xtermRef.current.dispose()
+        } catch (e) {}
+        xtermRef.current = null
+      } else {
+        try {
+          term.dispose()
+        } catch (e) {}
+      }
     }
   }, [])
 
