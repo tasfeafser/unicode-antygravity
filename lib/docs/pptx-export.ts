@@ -1,15 +1,8 @@
-'use client'
-
-import PptxGenJS from 'pptxgenjs'
-
-/**
- * Parse AI-generated slide content and export as PPTX.
- * Expected format uses ---SLIDE--- and ---END SLIDE--- delimiters.
- */
 export async function exportToPPTX(
   content: string,
   title: string
 ): Promise<void> {
+  const PptxGenJS = (await import('pptxgenjs')).default
   const pptx = new PptxGenJS()
   
   pptx.author = 'Unicode Platform'
