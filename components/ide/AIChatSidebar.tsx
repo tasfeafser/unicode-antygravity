@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { Sparkles, Send, Loader2, Code, Bug, Zap, X, ChevronLeft } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 interface AIChatSidebarProps {
   isOpen: boolean
@@ -71,26 +73,26 @@ export function AIChatSidebar({ isOpen, onClose, currentCode, currentLanguage, c
   if (!isOpen) return null
 
   return (
-    <div className="h-full bg-[#181818] border-l border-gray-800 flex flex-col w-[320px] shrink-0">
+    <div className="h-full bg-card dark:bg-[#181818] border-l border-border dark:border-gray-800 flex flex-col w-[320px] shrink-0 transition-colors">
       {/* Header */}
-      <div className="px-3 py-2.5 flex items-center justify-between border-b border-gray-800/50">
+      <div className="px-3 py-2.5 flex items-center justify-between border-b border-border dark:border-gray-800/50">
         <div className="flex items-center gap-2">
-          <Sparkles size={14} className="text-purple-400" />
-          <span className="text-xs font-semibold text-gray-300">AI Assistant</span>
+          <Sparkles size={14} className="text-primary" />
+          <span className="text-xs font-semibold text-foreground dark:text-gray-300">AI Assistant</span>
         </div>
-        <button onClick={onClose} className="w-6 h-6 flex items-center justify-center rounded hover:bg-gray-700 transition-colors">
-          <ChevronLeft size={14} className="text-gray-400" />
+        <button onClick={onClose} className="w-6 h-6 flex items-center justify-center rounded hover:bg-muted dark:hover:bg-gray-700 transition-colors">
+          <ChevronLeft size={14} className="text-muted-foreground" />
         </button>
       </div>
 
       {/* Quick Actions */}
-      <div className="px-3 py-2 flex gap-1.5 border-b border-gray-800/30">
+      <div className="px-3 py-2 flex gap-1.5 border-b border-border dark:border-gray-800/30">
         {quickActions.map((action, i) => (
           <button
             key={i}
             onClick={() => sendMessage(action.prompt)}
             disabled={isLoading || !currentCode}
-            className="flex items-center gap-1 px-2.5 py-1 bg-gray-800/50 hover:bg-gray-700 text-gray-400 hover:text-white rounded-md text-[10px] font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="flex items-center gap-1 px-2.5 py-1 bg-muted/50 dark:bg-gray-800/50 hover:bg-muted dark:hover:bg-gray-700 text-muted-foreground hover:text-foreground rounded-md text-[10px] font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >
             {action.icon}
             {action.label}
@@ -109,12 +111,20 @@ export function AIChatSidebar({ isOpen, onClose, currentCode, currentLanguage, c
         )}
         {messages.map((msg, i) => (
           <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[85%] px-3 py-2 rounded-xl text-xs leading-relaxed ${
+            <div className={`max-w-[90%] px-3 py-2 rounded-2xl text-[11px] leading-relaxed shadow-sm ${
               msg.role === 'user'
-                ? 'bg-blue-600/20 text-blue-100 rounded-br-sm'
-                : 'bg-gray-800/50 text-gray-300 rounded-bl-sm'
+                ? 'bg-purple-600 text-white rounded-br-sm'
+                : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-100 dark:border-gray-700/50 rounded-bl-sm prose prose-invert prose-xs'
             }`}>
-              <pre className="whitespace-pre-wrap font-sans">{msg.content}</pre>
+              {msg.role === 'user' ? (
+                <p className="whitespace-pre-wrap">{msg.content}</p>
+              ) : (
+                <div className="assistant-markdown">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {msg.content}
+                  </ReactMarkdown>
+                </div>
+              )}
             </div>
           </div>
         ))}
@@ -129,7 +139,7 @@ export function AIChatSidebar({ isOpen, onClose, currentCode, currentLanguage, c
       </div>
 
       {/* Input */}
-      <div className="p-3 border-t border-gray-800/50">
+      <div className="p-3 border-t border-border dark:border-gray-800/50">
         {currentFileName && (
           <div className="text-[10px] text-gray-600 mb-1.5 truncate">
             Context: <span className="text-gray-500">{currentFileName}</span>
@@ -141,7 +151,7 @@ export function AIChatSidebar({ isOpen, onClose, currentCode, currentLanguage, c
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(input) } }}
             placeholder="Ask about your code..."
-            className="flex-1 bg-gray-800/50 border border-gray-700/50 rounded-lg px-3 py-2 text-xs text-white placeholder-gray-600 outline-none focus:border-purple-500/50"
+            className="flex-1 bg-muted/50 dark:bg-gray-800/50 border border-border dark:border-gray-700/50 rounded-lg px-3 py-2 text-xs text-foreground placeholder-muted-foreground outline-none focus:border-primary/50 transition-colors"
           />
           <button
             onClick={() => sendMessage(input)}

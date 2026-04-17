@@ -1,11 +1,6 @@
 import { Pinecone, Index, RecordMetadata } from '@pinecone-database/pinecone'
 import { embeddingService } from './embeddings'
 
-// Initialize Pinecone
-const pinecone = new Pinecone({
-  apiKey: process.env.PINECONE_API_KEY || '',
-})
-
 // Types for our vectors
 export interface CourseVector extends Record<string, any> {
   type: 'course' | 'document' | 'code' | 'qa'
@@ -18,11 +13,27 @@ export interface CourseVector extends Record<string, any> {
 
 export class PineconeService {
   private indexName: string
-  private index: Index
+  private _index?: Index
+  private _pinecone?: Pinecone
 
   constructor() {
     this.indexName = process.env.PINECONE_INDEX_NAME || 'unicode'
-    this.index = pinecone.Index(this.indexName)
+  }
+
+  private get pinecone() {
+    if (!this._pinecone) {
+      this._pinecone = new Pinecone({
+        apiKey: process.env.PINECONE_API_KEY || 'placeholder_key',
+      })
+    }
+    return this._pinecone
+  }
+
+  private get index() {
+    if (!this._index) {
+      this._index = this.pinecone.Index(this.indexName)
+    }
+    return this._index
   }
 
   /**
@@ -105,7 +116,7 @@ export class PineconeService {
     sections: Array<{ title: string; content: string }>
   ) {
     const vectors = []
-    
+
     // Create main course vector
     const mainEmbedding = await embeddingService.generateEmbedding(
       `${title}\n\n${content}`
@@ -157,7 +168,7 @@ export class PineconeService {
     const embedding = await embeddingService.generateEmbedding(
       `${description}\n\n${language} code:\n${code}`
     )
-    
+
     await this.upsertVectors([{
       id: `code-${codeId}`,
       values: embedding,
@@ -180,7 +191,7 @@ export class PineconeService {
     topic: string
   ) {
     const embedding = await embeddingService.generateEmbedding(question)
-    
+
     await this.upsertVectors([{
       id: `qa-${questionId}`,
       values: embedding,
@@ -202,11 +213,11 @@ export class PineconeService {
     maxResults: number = 3
   ): Promise<string> {
     const results = await this.search(query, maxResults, { courseId })
-    
+
     if (results.length === 0) {
       return ''
     }
-    
+
     const contextParts = results.map(result => {
       const metadata = result.metadata
       if (metadata.type === 'qa') {
@@ -217,7 +228,7 @@ export class PineconeService {
         return `From "${metadata.title}":\n${metadata.content}`
       }
     })
-    
+
     return contextParts.join('\n\n---\n\n')
   }
 }

@@ -61,16 +61,16 @@ export function FileExplorer({ files, activeFileId, onSelectFile, onCreateFile, 
   const getIcon = (lang: string) => FILE_ICONS[lang] || FILE_ICONS.default
 
   return (
-    <div className="h-full bg-[#181818] border-r border-gray-800 flex flex-col select-none">
+    <div className="h-full bg-card dark:bg-[#181818] border-r border-border dark:border-gray-800 flex flex-col select-none overflow-hidden transition-colors">
       {/* Header */}
-      <div className="px-3 py-2.5 flex items-center justify-between border-b border-gray-800/50">
-        <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Explorer</span>
+      <div className="px-3 py-2.5 flex items-center justify-between border-b border-border dark:border-gray-800/50">
+        <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Explorer</span>
         <button
           onClick={() => setIsCreating(true)}
-          className="w-6 h-6 flex items-center justify-center rounded hover:bg-gray-700 transition-colors"
+          className="w-6 h-6 flex items-center justify-center rounded hover:bg-muted dark:hover:bg-gray-700 transition-colors"
           title="New File"
         >
-          <Plus size={14} className="text-gray-400" />
+          <Plus size={14} className="text-muted-foreground hover:text-foreground" />
         </button>
       </div>
 
@@ -78,7 +78,7 @@ export function FileExplorer({ files, activeFileId, onSelectFile, onCreateFile, 
       <div className="flex-1 overflow-y-auto">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full px-3 py-1.5 flex items-center gap-1 text-[11px] font-semibold text-gray-400 uppercase tracking-wider hover:bg-gray-800/50"
+          className="w-full px-3 py-1.5 flex items-center gap-1 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider hover:bg-muted dark:hover:bg-gray-800/50 transition-colors"
         >
           {isExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
           <FolderOpen size={12} className="text-blue-400" />
@@ -100,7 +100,7 @@ export function FileExplorer({ files, activeFileId, onSelectFile, onCreateFile, 
                     if (e.key === 'Escape') { setIsCreating(false); setNewFileName('') }
                   }}
                   placeholder="filename.py"
-                  className="flex-1 bg-gray-800 text-white text-xs px-2 py-0.5 rounded outline-none border border-blue-500/50 focus:border-blue-500"
+                  className="flex-1 bg-muted dark:bg-gray-800 text-foreground dark:text-white text-xs px-2 py-0.5 rounded outline-none border border-primary/20 focus:border-primary transition-colors"
                 />
                 <button onClick={handleCreate} className="text-green-400 hover:text-green-300"><Check size={12} /></button>
                 <button onClick={() => { setIsCreating(false); setNewFileName('') }} className="text-red-400 hover:text-red-300"><X size={12} /></button>
@@ -113,8 +113,8 @@ export function FileExplorer({ files, activeFileId, onSelectFile, onCreateFile, 
                 key={file.id}
                 className={`group flex items-center gap-1.5 px-4 py-1 cursor-pointer text-xs transition-colors ${
                   activeFileId === file.id 
-                    ? 'bg-gray-700/50 text-white' 
-                    : 'text-gray-400 hover:bg-gray-800/50 hover:text-gray-200'
+                    ? 'bg-primary/10 dark:bg-gray-700/50 text-foreground dark:text-white border-l-2 border-primary' 
+                    : 'text-muted-foreground hover:bg-muted dark:hover:bg-gray-800/50 hover:text-foreground dark:hover:text-gray-200'
                 }`}
                 onClick={() => onSelectFile(file.id)}
               >

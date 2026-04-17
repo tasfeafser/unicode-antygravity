@@ -1,18 +1,22 @@
 'use client'
 
-import { useState, useCallback } from 'react'
-import { CodeEditor } from '@/components/ide/Editor'
-import { Terminal } from '@/components/ide/Terminal'
+import dynamic from 'next/dynamic'
+import { useState, useCallback, useEffect } from 'react'
+
+const CodeEditor = dynamic(() => import('@/components/ide/Editor').then(mod => mod.CodeEditor), { ssr: false })
+const Terminal = dynamic(() => import('@/components/ide/Terminal').then(mod => mod.Terminal), { ssr: false })
+import { useTheme } from 'next-themes'
 import { FileExplorer, VirtualFile } from '@/components/ide/FileExplorer'
 import { FileTabs } from '@/components/ide/FileTabs'
 import { AIChatSidebar } from '@/components/ide/AIChatSidebar'
 import { 
   Play, Save, Share, ArrowLeft, Sparkles, Sun, Moon, 
   PanelRightOpen, PanelRightClose, ChevronUp, ChevronDown,
-  Copy, Download
+  Copy, Download, FileType
 } from 'lucide-react'
 import Link from 'next/link'
 import { useLanguage } from '@/lib/i18n/useLanguage'
+import { HelpWidget } from '@/components/ui/HelpWidget'
 
 // Language detection from file extension
 const EXT_TO_LANG: Record<string, string> = {
@@ -90,9 +94,13 @@ export default function IDEPage() {
   const [activeFileId, setActiveFileId] = useState<string>('main-py')
 
   // Editor state
-  const [theme, setTheme] = useState<'vs-dark' | 'light'>('vs-dark')
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
   const [output, setOutput] = useState('')
   const [isExecuting, setIsExecuting] = useState(false)
+  const [isGeneratingPPT, setIsGeneratingPPT] = useState(false)
+
+  useEffect(() => setMounted(true), [])
 
   // Panel state
   const [showAI, setShowAI] = useState(false)
@@ -192,6 +200,35 @@ export default function IDEPage() {
     }
   }
 
+  const handleGeneratePPT = async () => {
+    if (!activeFile) return
+    setIsGeneratingPPT(true)
+    
+    try {
+      const res = await fetch('/api/ppt/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: activeFile.content,
+          language: activeFile.language,
+          fileName: activeFile.name,
+        })
+      })
+      
+      const data = await res.json()
+      if (data.success) {
+        // In a real app, trigger download
+        alert(uiLang === 'en' 
+          ? `Presentation "${data.fileName}" generated successfully!` 
+          : `演示文稿 "${data.fileName}" 生成成功！`)
+      }
+    } catch (error) {
+      console.error('PPT Error:', error)
+    } finally {
+      setIsGeneratingPPT(false)
+    }
+  }
+
   const handleSave = () => {
     if (!activeFileId) return
     setFiles(prev => prev.map(f => 
@@ -204,12 +241,15 @@ export default function IDEPage() {
     if (activeFile) navigator.clipboard.writeText(activeFile.content)
   }
 
-  const isDark = theme === 'vs-dark'
+  if (!mounted) return null
+
+  const isDark = theme === 'dark' || theme === 'vs-dark'
+  const themeClass = isDark ? 'dark bg-[#1e1e1e] text-white' : 'purple-mixed bg-white text-gray-900'
 
   return (
-    <div className={`flex flex-col h-screen overflow-hidden ${isDark ? 'bg-[#1e1e1e] text-white' : 'bg-white text-gray-900'}`}>
-      {/* Top Toolbar */}
-      <div className={`h-12 flex items-center justify-between px-4 shrink-0 ${isDark ? 'bg-[#181818] border-b border-gray-800' : 'bg-gray-100 border-b border-gray-300'}`}>
+    <div className={`flex flex-col h-screen overflow-hidden ${themeClass}`}>
+      {/* Top Toolbar - Glassmorphism */}
+      <div className={`h-12 flex items-center justify-between px-4 shrink-0 z-10 transition-colors ${isDark ? 'glass-dark border-b border-gray-800/50' : 'glass-light border-b border-purple-100'}`}>
         <div className="flex items-center gap-3">
           <Link href="/" className={`w-7 h-7 rounded flex items-center justify-center transition-colors ${isDark ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-200 hover:bg-gray-300'}`}>
             <ArrowLeft size={14} className="text-gray-400" />
@@ -231,23 +271,37 @@ export default function IDEPage() {
         <div className="flex items-center gap-2">
           {/* Theme toggle */}
           <button
-            onClick={() => setTheme(isDark ? 'light' : 'vs-dark')}
-            className={`w-7 h-7 flex items-center justify-center rounded transition-colors ${isDark ? 'hover:bg-gray-800' : 'hover:bg-gray-200'}`}
+            onClick={() => setTheme(isDark ? 'light' : 'dark')}
+            className={`w-7 h-7 flex items-center justify-center rounded transition-colors ${isDark ? 'hover:bg-gray-800' : 'hover:bg-purple-50'}`}
             title="Toggle theme"
           >
-            {isDark ? <Sun size={14} className="text-yellow-400" /> : <Moon size={14} className="text-gray-600" />}
+            {isDark ? <Sun size={14} className="text-yellow-400" /> : <Moon size={14} className="text-purple-600" />}
           </button>
 
           {/* Terminal toggle */}
           <button
             onClick={() => setShowTerminal(!showTerminal)}
-            className={`w-7 h-7 flex items-center justify-center rounded transition-colors ${isDark ? 'hover:bg-gray-800' : 'hover:bg-gray-200'}`}
+            className={`w-7 h-7 flex items-center justify-center rounded transition-colors ${isDark ? 'hover:bg-gray-800' : 'hover:bg-purple-50'}`}
             title="Toggle terminal"
           >
             {showTerminal ? <ChevronDown size={14} className="text-gray-400" /> : <ChevronUp size={14} className="text-gray-400" />}
           </button>
 
-          <div className={`h-5 w-px ${isDark ? 'bg-gray-700' : 'bg-gray-300'}`} />
+          <div className={`h-5 w-px ${isDark ? 'bg-gray-700' : 'bg-purple-100'}`} />
+
+          {/* PPT Generation */}
+          <button 
+            onClick={handleGeneratePPT}
+            disabled={isGeneratingPPT || !activeFile}
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs transition-colors ${
+              isGeneratingPPT 
+                ? 'bg-purple-100 text-purple-400' 
+                : isDark ? 'hover:bg-gray-800 text-gray-400' : 'hover:bg-purple-50 text-purple-600'
+            }`}
+          >
+            <FileType size={13} className={isGeneratingPPT ? 'animate-pulse' : ''} />
+            {isGeneratingPPT ? (uiLang === 'en' ? 'Generating...' : '生成中...') : 'PPT'}
+          </button>
 
           {/* Copy */}
           <button onClick={handleCopyCode} className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs transition-colors ${isDark ? 'hover:bg-gray-800 text-gray-400' : 'hover:bg-gray-200 text-gray-600'}`}>
@@ -275,16 +329,20 @@ export default function IDEPage() {
 
           <div className={`h-5 w-px ${isDark ? 'bg-gray-700' : 'bg-gray-300'}`} />
 
-          {/* Run */}
+          {/* Run - Animated Gradient Button */}
           <button 
             onClick={executeCode}
             disabled={isExecuting || !activeFile}
-            className="flex items-center gap-1.5 px-3 py-1 bg-green-600 hover:bg-green-700 text-white font-medium rounded text-xs transition-colors disabled:opacity-40 whitespace-nowrap"
+            className="group relative flex items-center gap-1.5 px-4 py-1.5 font-bold text-white rounded-md text-xs transition-all duration-300 disabled:opacity-40 whitespace-nowrap overflow-hidden hover-scale hover-glow-green"
           >
-            <Play size={13} fill="white" /> 
-            {isExecuting 
-              ? (uiLang === 'en' ? 'Running...' : '运行中...') 
-              : (uiLang === 'en' ? 'Run' : '运行')}
+            <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-600 group-hover:from-green-400 group-hover:to-emerald-500 transition-all duration-300" />
+            <div className="absolute inset-0 shimmer-bg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <span className="relative z-10 flex items-center gap-1.5">
+              <Play size={13} fill="white" className="group-hover:scale-110 transition-transform" /> 
+              {isExecuting 
+                ? (uiLang === 'en' ? 'Running...' : '运行中...') 
+                : (uiLang === 'en' ? 'Run Code' : '运行代码')}
+            </span>
           </button>
         </div>
       </div>
@@ -292,7 +350,7 @@ export default function IDEPage() {
       {/* Main Content */}
       <div className="flex-1 flex overflow-hidden">
         {/* File Explorer */}
-        <div style={{ width: explorerWidth }} className="shrink-0">
+        <div style={{ width: explorerWidth }} className={`shrink-0 border-r transition-colors ${isDark ? 'bg-[#181818] border-gray-800/50' : 'bg-card border-border'}`}>
           <FileExplorer
             files={files}
             activeFileId={activeFileId}
@@ -318,13 +376,13 @@ export default function IDEPage() {
             {activeFile ? (
               <CodeEditor
                 language={activeFile.language}
-                theme={theme}
+                theme={isDark ? 'vs-dark' : 'light'}
                 value={activeFile.content}
                 onChange={handleCodeChange}
                 fileName={activeFile.name}
               />
             ) : (
-              <div className={`flex items-center justify-center h-full text-sm ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>
+              <div className={`flex items-center justify-center h-full text-sm ${isDark ? 'text-gray-600' : 'text-muted-foreground'}`}>
                 {uiLang === 'en' ? 'Select or create a file to start coding' : '选择或创建文件开始编码'}
               </div>
             )}
@@ -351,7 +409,7 @@ export default function IDEPage() {
       </div>
 
       {/* Status Bar */}
-      <div className={`h-6 flex items-center justify-between px-4 text-[10px] shrink-0 ${isDark ? 'bg-[#007ACC] text-white' : 'bg-blue-600 text-white'}`}>
+      <div className={`h-6 flex items-center justify-between px-4 text-[10px] shrink-0 transition-colors ${isDark ? 'bg-[#007ACC] text-white' : 'bg-purple-600 text-white'}`}>
         <div className="flex items-center gap-3">
           <span>{files.length} {uiLang === 'en' ? 'files' : '文件'}</span>
           {activeFile && <span>{activeFile.language}</span>}
@@ -362,6 +420,8 @@ export default function IDEPage() {
           <span>Unicode IDE v2.0</span>
         </div>
       </div>
+      {/* Help Widget */}
+      <HelpWidget />
     </div>
   )
 }

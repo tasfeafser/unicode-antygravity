@@ -4,7 +4,7 @@
 -- ENUMS & TYPES
 -- =========================================================================
 CREATE TYPE user_role AS ENUM ('student', 'instructor', 'admin');
-CREATE TYPE subscription_tier AS ENUM ('free', 'pro', 'enterprise');
+CREATE TYPE subscription_tier AS ENUM ('free', 'pro', 'team', 'enterprise');
 CREATE TYPE exercise_type AS ENUM ('coding', 'quiz', 'linux', 'security', 'project');
 
 -- =========================================================================
@@ -32,6 +32,8 @@ CREATE TABLE subscriptions (
     stripe_subscription_id TEXT,
     tier subscription_tier DEFAULT 'free'::subscription_tier,
     status TEXT,
+    price_id TEXT,
+    cancel_at_period_end BOOLEAN DEFAULT false,
     current_period_start TIMESTAMP WITH TIME ZONE,
     current_period_end TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,

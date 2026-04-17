@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs'
 import { ragService } from '@/lib/ai/rag-service'
+import { Noto_Traditional_Nushu } from 'next/font/google'
 
 export async function POST(req: NextRequest) {
   try {
     const { userId } = auth()
-    
+
     if (!userId) {
       return new NextResponse('Unauthorized', { status: 401 })
     }
@@ -51,9 +52,10 @@ export async function POST(req: NextRequest) {
     // Non-streaming response
     const response = await ragService.chatWithRAG(message, courseId, userId)
     return NextResponse.json(response)
-    
+
   } catch (error) {
     console.error('RAG Chat Error:', error)
     return new NextResponse('Internal Server Error', { status: 500 })
   }
 }
+
