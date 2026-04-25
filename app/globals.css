@@ -195,7 +195,7 @@
 
 .gradient-blur {
   position: fixed;
-  z-index: 40;
+  z-index: 0;
   inset: 0 0 auto 0;
   height: 120px;
   pointer-events: none;
