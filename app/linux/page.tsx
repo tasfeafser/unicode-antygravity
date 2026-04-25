@@ -107,26 +107,26 @@ export default function LinuxPage() {
   const progress = Math.round((completedExercises.length / EXERCISES.length) * 100)
 
   return (
-    <div className="flex h-screen bg-[#080810] text-white overflow-hidden font-sans">
+    <div className="flex h-screen bg-background text-foreground overflow-hidden font-inter">
 
       {/* ── Sidebar ─────────────────────────────────────────── */}
-      <div className="w-96 shrink-0 border-r border-orange-900/20 bg-gradient-to-b from-[#0d0d18] to-[#080810] flex flex-col overflow-hidden">
+      <div className="w-96 shrink-0 border-r border-[#ef233c]/20 bg-gradient-to-b from-[#1a0505] to-black flex flex-col overflow-hidden">
 
         {/* Header */}
-        <div className="p-5 border-b border-white/5 shrink-0">
+        <div className="p-5 border-b border-border shrink-0">
           <div className="flex items-center gap-3 mb-5">
             <Link
               href="/"
-              className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-orange-500/20 hover:border-orange-500/30 transition-all"
+              className="w-8 h-8 rounded-lg bg-muted border border-border flex items-center justify-center hover:bg-orange-500/20 hover:border-orange-500/30 transition-all"
             >
               <ArrowLeft size={14} className="text-slate-400" />
             </Link>
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 bg-orange-500/10 border border-orange-500/20 rounded-xl flex items-center justify-center">
-                <Terminal className="text-orange-400 w-5 h-5" />
+              <div className="w-9 h-9 bg-[#ef233c]/10 border border-[#ef233c]/20 rounded-xl flex items-center justify-center">
+                <Terminal className="text-[#ef233c] w-5 h-5" />
               </div>
               <div>
-                <h1 className="text-base font-bold text-white leading-none">Linux Simulator</h1>
+                <h1 className="text-base font-bold text-foreground leading-none">Linux Simulator</h1>
                 <p className="text-[10px] text-slate-600 mt-0.5">Interactive OS Terminal</p>
               </div>
             </div>
@@ -143,7 +143,7 @@ export default function LinuxPage() {
             </div>
             <div className="h-1.5 bg-white/8 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-orange-500 to-amber-400 transition-all duration-700 ease-out rounded-full"
+                className="h-full bg-gradient-to-r from-[#ef233c] to-red-400 transition-all duration-700 ease-out rounded-full"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -155,9 +155,9 @@ export default function LinuxPage() {
         </div>
 
         {/* Stats row */}
-        <div className="grid grid-cols-3 divide-x divide-white/5 border-b border-white/5 shrink-0">
+        <div className="grid grid-cols-3 divide-x divide-white/5 border-b border-border shrink-0">
           {[
-            { icon: <Cpu size={13} className="text-orange-400" />, label: 'Sandbox', value: 'Active' },
+            { icon: <Cpu size={13} className="text-[#ef233c]" />, label: 'Sandbox', value: 'Active' },
             { icon: <Wifi size={13} className="text-green-400" />, label: 'Network', value: 'Isolated' },
             { icon: <HardDrive size={13} className="text-blue-400" />, label: 'Storage', value: '10 GB' },
           ].map(stat => (
@@ -187,8 +187,8 @@ export default function LinuxPage() {
                     : isCompleted
                     ? 'bg-green-500/6 border-green-500/15'
                     : isLocked
-                    ? 'opacity-40 border-white/5 bg-white/2'
-                    : 'bg-white/4 border-white/10 hover:border-orange-500/25 hover:bg-orange-500/5'
+                    ? 'opacity-40 border-border bg-white/2'
+                    : 'bg-white/4 border-border hover:border-[#ef233c]/25 hover:bg-[#ef233c]/5'
                 }`}
               >
                 <div className="flex items-start gap-3">
@@ -198,8 +198,8 @@ export default function LinuxPage() {
                     ) : isLocked ? (
                       <Lock className="w-4 h-4 text-slate-600" />
                     ) : (
-                      <div className="w-5 h-5 rounded-full border-2 border-orange-500/50 flex items-center justify-center">
-                        <div className="w-2 h-2 rounded-full bg-orange-500" />
+                      <div className="w-5 h-5 rounded-full border-2 border-[#ef233c]/50 flex items-center justify-center">
+                        <div className="w-2 h-2 rounded-full bg-[#ef233c]" />
                       </div>
                     )}
                   </div>
@@ -210,7 +210,7 @@ export default function LinuxPage() {
                       </span>
                       <span className="text-[9px] text-slate-600">+{exercise.xp} XP</span>
                     </div>
-                    <h3 className={`text-sm font-semibold mb-1 ${isCompleted ? 'text-green-300' : 'text-white'}`}>
+                    <h3 className={`text-sm font-semibold mb-1 ${isCompleted ? 'text-green-300' : 'text-foreground'}`}>
                       {exercise.title}
                     </h3>
                     <p className="text-xs text-slate-500 leading-relaxed">{exercise.description}</p>
@@ -219,14 +219,14 @@ export default function LinuxPage() {
                       <div className="mt-2.5">
                         <button
                           onClick={() => setActiveHint(activeHint === exercise.id ? null : exercise.id)}
-                          className="text-[11px] flex items-center gap-1 text-orange-400 hover:text-orange-300 transition-colors"
+                          className="text-[11px] flex items-center gap-1 text-[#ef233c] hover:text-red-300 transition-colors"
                         >
                           <Zap size={10} />
                           {activeHint === exercise.id ? 'Hide hint' : 'Show hint'}
                         </button>
                         {activeHint === exercise.id && (
-                          <div className="mt-2 px-3 py-2 bg-orange-500/8 border border-orange-500/20 rounded-lg">
-                            <code className="text-[11px] text-orange-200/80 font-mono">$ {exercise.hint}</code>
+                          <div className="mt-2 px-3 py-2 bg-[#ef233c]/8 border border-[#ef233c]/20 rounded-lg">
+                            <code className="text-[11px] text-red-200/80 font-mono">$ {exercise.hint}</code>
                           </div>
                         )}
                       </div>
@@ -240,13 +240,13 @@ export default function LinuxPage() {
       </div>
 
       {/* ── Terminal Area ───────────────────────────────────── */}
-      <div className="flex-1 flex flex-col bg-black overflow-hidden">
+      <div className="flex-1 flex flex-col bg-background overflow-hidden">
 
         {/* Terminal top bar */}
-        <div className="shrink-0 h-10 flex items-center justify-between px-5 bg-[#0a0a14] border-b border-orange-900/20">
+        <div className="shrink-0 h-10 flex items-center justify-between px-5 bg-background border-b border-border">
           <div className="flex items-center gap-3 font-mono text-xs">
             <span className="text-slate-600">Session</span>
-            <span className="text-orange-400/60">NX-{Math.floor(8000 + Math.random() * 1000)}</span>
+            <span className="text-[#ef233c]/60">NX-{Math.floor(8000 + Math.random() * 1000)}</span>
             <span className="text-slate-700">·</span>
             <span className="text-green-400/70 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse inline-block" />

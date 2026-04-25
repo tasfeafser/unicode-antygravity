@@ -1,14 +1,19 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Manrope, Dela_Gothic_One, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import "@/components/ui/uiverse.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CookieConsent } from "@/components/legal/CookieConsent";
 import { OnboardingTour } from "@/components/onboarding/OnboardingTour";
 import { PostHogProvider } from "@/components/providers/PostHogProvider";
 import { FeedbackButton } from "@/components/community/FeedbackButton";
+import { LanguageProvider } from "@/components/providers/LanguageProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
+const manrope = Manrope({ subsets: ["latin"], variable: '--font-manrope' });
+const delaGothic = Dela_Gothic_One({ weight: "400", subsets: ["latin"], variable: '--font-dela' });
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: '--font-space' });
 
 export const metadata: Metadata = {
   title: "Unicode - AI-Powered CS Education Platform",
@@ -22,7 +27,7 @@ export const metadata: Metadata = {
     siteName: "Unicode",
     images: [
       {
-        url: "https://unicode.edu/og-image.png", // Dynamic OG image logic can be added later
+        url: "https://unicode.edu/og-image.png",
         width: 1200,
         height: 630,
       },
@@ -43,44 +48,38 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const BACKGROUND_TEXT_1 = "function init() { return true; } const x = 42; 逻辑 循环 函数 数据 SELECT * FROM users; import { auth } from '@clerk/nextjs'; 状态 变量 异步 并发 def fibonacci(n): ∑(n=1 to ∞) 1/n² = π²/6 ∫e^x dx = e^x + C O(N log N) ".repeat(3)
-  const BACKGROUND_TEXT_2 = "class Unicode { constructor() { this.active = true } } 算法 结构 系统 架构 git commit -m 'initial commit' chmod 777 /var/www E = mc² 🚀 💻 🌐 ∇ × B = μ₀J + μ₀ε₀(∂E/∂t) { JSON: 'Data' } ".repeat(3)
-
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body className={inter.className}>
+      <html lang="en" suppressHydrationWarning className={`${inter.variable} ${manrope.variable} ${delaGothic.variable} ${spaceGrotesk.variable}`}>
+        <body className="font-inter selection-red bg-background text-foreground antialiased min-h-screen relative overflow-x-hidden">
           <PostHogProvider>
             <ThemeProvider
               attribute="class"
               defaultTheme="dark"
-              enableSystem
+              enableSystem={false}
               disableTransitionOnChange
             >
-              <div className="min-h-screen relative bg-background text-foreground overflow-x-hidden">
-                {/* Animated Vertical Flowing Background - Opacity depends on theme */}
-                <div className="fixed inset-0 pointer-events-none opacity-[0.15] dark:opacity-[0.25] select-none flex justify-center gap-[10vw] overflow-hidden font-mono text-xl tracking-widest text-green-400">
-                  <div className="bg-float-vertical">
-                    <div className="writing-vertical">{BACKGROUND_TEXT_1}</div>
-                    <div className="writing-vertical">{BACKGROUND_TEXT_1}</div>
-                  </div>
-                  <div className="bg-float-vertical-reverse text-blue-400">
-                    <div className="writing-vertical">{BACKGROUND_TEXT_2}</div>
-                    <div className="writing-vertical">{BACKGROUND_TEXT_2}</div>
-                  </div>
-                  <div className="bg-float-vertical text-purple-400">
-                    <div className="writing-vertical">{BACKGROUND_TEXT_1}</div>
-                    <div className="writing-vertical">{BACKGROUND_TEXT_1}</div>
-                  </div>
-                </div>
-                
-                <div className="relative z-10">
-                  {children}
-                </div>
-                <CookieConsent />
-                <OnboardingTour />
-                <FeedbackButton />
+              <LanguageProvider>
+              {/* Global Background Effects for Red Noir Theme */}
+              <div className="fixed inset-0 z-0 pointer-events-none hidden dark:block">
+                  <div className="absolute inset-0 bg-gradient-to-b from-[#1a0505] to-black"></div>
+                  <div className="absolute top-0 left-0 w-[1px] h-[1px] bg-transparent stars-1 animate-[animStar_50s_linear_infinite]"></div>
+                  <div className="absolute top-0 left-0 w-[2px] h-[2px] bg-transparent stars-2 animate-[animStar_80s_linear_infinite]"></div>
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-red-600/5 rounded-full blur-[120px]"></div>
+                  <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(circle_at_center,black_40%,transparent_80%)]"></div>
               </div>
+
+              {/* Top Blur Header */}
+              <div className="gradient-blur hidden dark:block"></div>
+
+              <div className="relative z-10">
+                {children}
+              </div>
+              
+              <CookieConsent />
+              <OnboardingTour />
+              <FeedbackButton />
+              </LanguageProvider>
             </ThemeProvider>
           </PostHogProvider>
         </body>

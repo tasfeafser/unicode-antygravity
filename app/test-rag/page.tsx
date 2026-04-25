@@ -124,8 +124,8 @@ export default function TestRAGPage() {
         
         {/* Header */}
         <div className="flex items-center gap-6 mb-12">
-           <Link href="/" className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all border border-white/10 group">
-            <ArrowLeft size={20} className="text-gray-400 group-hover:text-white transition-colors" />
+           <Link href="/" className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center hover:bg-muted-foreground/20 transition-all border border-border group">
+            <ArrowLeft size={20} className="text-gray-400 group-hover:text-foreground transition-colors" />
           </Link>
           <div>
             <h1 className="text-3xl font-bold mb-1">Course Library & RAG</h1>
@@ -137,22 +137,22 @@ export default function TestRAGPage() {
           
           {/* Controls Column */}
           <div className="lg:col-span-1 space-y-6">
-            <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-6 backdrop-blur-md">
+            <div className="bg-white/[0.03] border border-border rounded-2xl p-6 backdrop-blur-md">
               <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Library size={18} className="text-purple-400" />
+                <Library size={18} className="text-[#ef233c]" />
                 1. Index Content
               </h2>
               <p className="text-sm text-gray-400 mb-6">Create vector embeddings for courses in Pinecone to enable semantic search.</p>
               <button
                 onClick={handleIndexSampleCourse}
                 disabled={indexing}
-                className="w-full py-3 bg-purple-600 hover:bg-purple-500 text-white rounded-xl font-medium transition-all shadow-[0_0_20px_rgba(147,51,234,0.3)] disabled:opacity-50 disabled:shadow-none"
+                className="w-full py-3 bg-[#ef233c] hover:bg-red-700 text-foreground rounded-xl font-medium transition-all shadow-[0_0_20px_rgba(239,35,60,0.3)] disabled:opacity-50 disabled:shadow-none"
               >
                 {indexing ? 'Indexing...' : 'Index Python 101'}
               </button>
             </div>
 
-            <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-6 backdrop-blur-md">
+            <div className="bg-white/[0.03] border border-border rounded-2xl p-6 backdrop-blur-md">
               <h3 className="font-semibold mb-4 text-sm text-gray-400 uppercase tracking-wider">How it works</h3>
               <ul className="space-y-4">
                 {[
@@ -161,7 +161,7 @@ export default function TestRAGPage() {
                   { icon: <Sparkles size={14} />, text: "AI answers using course context" }
                 ].map((item, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm text-gray-300">
-                    <div className="w-6 h-6 rounded bg-white/5 flex items-center justify-center text-gray-400">
+                    <div className="w-6 h-6 rounded bg-muted flex items-center justify-center text-gray-400">
                       {item.icon}
                     </div>
                     {item.text}
@@ -173,10 +173,10 @@ export default function TestRAGPage() {
 
           {/* Chat Column */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-[#111] border border-white/10 rounded-2xl overflow-hidden flex flex-col min-h-[500px]">
-              <div className="p-4 border-b border-white/10 bg-white/[0.02] flex items-center justify-between">
+            <div className="bg-[#111] border border-border rounded-2xl overflow-hidden flex flex-col min-h-[500px]">
+              <div className="p-4 border-b border-border bg-white/[0.02] flex items-center justify-between">
                 <span className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                  <Search size={16} className="text-blue-400" />
+                  <Search size={16} className="text-[#ef233c]" />
                   Semantic Query
                 </span>
                 <input
@@ -184,14 +184,14 @@ export default function TestRAGPage() {
                   value={courseId}
                   onChange={(e) => setCourseId(e.target.value)}
                   placeholder="Course ID (optional)"
-                  className="bg-transparent border border-white/5 text-xs rounded px-2 py-1 focus:outline-none focus:border-blue-500/50"
+                  className="bg-transparent border border-border text-xs rounded px-2 py-1 focus:outline-none focus:border-[#ef233c]/50"
                 />
               </div>
 
               <div className="flex-1 p-6 overflow-y-auto">
                 {response ? (
                   <div className="prose prose-invert max-w-none">
-                    <div className="bg-white/[0.02] border border-white/5 p-6 rounded-xl font-mono text-sm leading-relaxed text-blue-100">
+                    <div className="bg-white/[0.02] border border-border p-6 rounded-xl font-mono text-sm leading-relaxed text-red-100">
                       {response}
                     </div>
                   </div>
@@ -202,19 +202,19 @@ export default function TestRAGPage() {
                   </div>
                 )}
                 {loading && (
-                  <div className="mt-4 flex items-center gap-3 text-sm text-blue-400 animate-pulse">
+                  <div className="mt-4 flex items-center gap-3 text-sm text-[#ef233c] animate-pulse">
                     <Sparkles size={16} /> Retrieving context and generating answer...
                   </div>
                 )}
               </div>
 
-              <div className="p-6 bg-white/[0.02] border-t border-white/10">
+              <div className="p-6 bg-white/[0.02] border-t border-border">
                 <div className="relative group">
                   <textarea
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Ask about Python concepts..."
-                    className="w-full bg-[#18181b] border border-white/10 focus:border-blue-500/50 rounded-xl p-4 pr-16 focus:ring-1 focus:ring-blue-500/50 transition-all resize-none h-24"
+                    className="w-full bg-[#18181b] border border-border focus:border-[#ef233c]/50 rounded-xl p-4 pr-16 focus:ring-1 focus:ring-[#ef233c]/50 transition-all resize-none h-24"
                     onKeyDown={e => {
                       if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault(); handleRAGChat();
@@ -224,7 +224,7 @@ export default function TestRAGPage() {
                   <button
                     onClick={handleRAGChat}
                     disabled={loading || !message}
-                    className="absolute bottom-4 right-4 w-10 h-10 bg-blue-600 hover:bg-blue-500 text-white rounded-lg flex items-center justify-center disabled:opacity-30 transition-all"
+                    className="absolute bottom-4 right-4 w-10 h-10 bg-[#ef233c] hover:bg-red-700 text-foreground rounded-lg flex items-center justify-center disabled:opacity-30 transition-all"
                   >
                     <Search size={18} />
                   </button>

@@ -68,6 +68,7 @@
     "react-split": "^2.0.14",
     "remark-gfm": "^4.0.1",
     "resend": "^3.5.0",
+    "sonner": "^2.0.7",
     "stripe": "^14.25.0",
     "tailwind-merge": "^2.6.1",
     "tailwindcss-animate": "^1.0.7",

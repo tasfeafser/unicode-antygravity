@@ -30,20 +30,20 @@ export default function Error({
           />
         </svg>
       </div>
-      <h2 className="text-2xl font-bold text-white mb-2">Something went wrong!</h2>
+      <h2 className="text-2xl font-bold text-foreground mb-2">Something went wrong!</h2>
       <p className="text-gray-400 mb-8 max-w-md">
         An unexpected error occurred in the Unicode platform. Our team has been notified.
       </p>
       <div className="flex gap-4">
         <button
           onClick={() => reset()}
-          className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors"
+          className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-foreground rounded-xl font-medium transition-colors"
         >
           Try again
         </button>
         <button
           onClick={() => window.location.href = '/'}
-          className="px-6 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl font-medium transition-colors"
+          className="px-6 py-2.5 bg-gray-800 hover:bg-gray-700 text-foreground rounded-xl font-medium transition-colors"
         >
           Go home
         </button>

@@ -244,12 +244,12 @@ export default function IDEPage() {
   if (!mounted) return null
 
   const isDark = theme === 'dark' || theme === 'vs-dark'
-  const themeClass = isDark ? 'dark bg-[#1e1e1e] text-white' : 'purple-mixed bg-white text-gray-900'
+  const themeClass = isDark ? 'dark bg-background text-foreground' : 'dark bg-background text-foreground'
 
   return (
     <div className={`flex flex-col h-screen overflow-hidden ${themeClass}`}>
       {/* Top Toolbar - Glassmorphism */}
-      <div className={`h-12 flex items-center justify-between px-4 shrink-0 z-10 transition-colors ${isDark ? 'glass-dark border-b border-gray-800/50' : 'glass-light border-b border-purple-100'}`}>
+      <div className={`h-12 flex items-center justify-between px-4 shrink-0 z-10 transition-colors bg-background border-b border-border`}>
         <div className="flex items-center gap-3">
           <Link href="/" className={`w-7 h-7 rounded flex items-center justify-center transition-colors ${isDark ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-200 hover:bg-gray-300'}`}>
             <ArrowLeft size={14} className="text-gray-400" />
@@ -275,7 +275,7 @@ export default function IDEPage() {
             className={`w-7 h-7 flex items-center justify-center rounded transition-colors ${isDark ? 'hover:bg-gray-800' : 'hover:bg-purple-50'}`}
             title="Toggle theme"
           >
-            {isDark ? <Sun size={14} className="text-yellow-400" /> : <Moon size={14} className="text-purple-600" />}
+            {isDark ? <Sun size={14} className="text-yellow-400" /> : <Moon size={14} className="text-[#ef233c]" />}
           </button>
 
           {/* Terminal toggle */}
@@ -295,8 +295,8 @@ export default function IDEPage() {
             disabled={isGeneratingPPT || !activeFile}
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs transition-colors ${
               isGeneratingPPT 
-                ? 'bg-purple-100 text-purple-400' 
-                : isDark ? 'hover:bg-gray-800 text-gray-400' : 'hover:bg-purple-50 text-purple-600'
+                ? 'bg-red-900/30 text-[#ef233c]' 
+                : isDark ? 'hover:bg-gray-800 text-gray-400' : 'hover:bg-muted text-[#ef233c]'
             }`}
           >
             <FileType size={13} className={isGeneratingPPT ? 'animate-pulse' : ''} />
@@ -318,7 +318,7 @@ export default function IDEPage() {
             onClick={() => setShowAI(!showAI)}
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs transition-colors ${
               showAI 
-                ? 'bg-purple-600/20 text-purple-400 border border-purple-500/30' 
+                ? 'bg-[#ef233c]/20 text-[#ef233c] border border-[#ef233c]/30' 
                 : isDark ? 'hover:bg-gray-800 text-gray-400' : 'hover:bg-gray-200 text-gray-600'
             }`}
           >
@@ -333,9 +333,9 @@ export default function IDEPage() {
           <button 
             onClick={executeCode}
             disabled={isExecuting || !activeFile}
-            className="group relative flex items-center gap-1.5 px-4 py-1.5 font-bold text-white rounded-md text-xs transition-all duration-300 disabled:opacity-40 whitespace-nowrap overflow-hidden hover-scale hover-glow-green"
+            className="group relative flex items-center gap-1.5 px-4 py-1.5 font-bold text-foreground rounded-md text-xs transition-all duration-300 disabled:opacity-40 whitespace-nowrap overflow-hidden hover-scale shadow-[0_0_15px_rgba(239,35,60,0.5)]"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-600 group-hover:from-green-400 group-hover:to-emerald-500 transition-all duration-300" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#ef233c] to-red-800 group-hover:from-red-500 group-hover:to-red-700 transition-all duration-300" />
             <div className="absolute inset-0 shimmer-bg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <span className="relative z-10 flex items-center gap-1.5">
               <Play size={13} fill="white" className="group-hover:scale-110 transition-transform" /> 
@@ -408,8 +408,7 @@ export default function IDEPage() {
         )}
       </div>
 
-      {/* Status Bar */}
-      <div className={`h-6 flex items-center justify-between px-4 text-[10px] shrink-0 transition-colors ${isDark ? 'bg-[#007ACC] text-white' : 'bg-purple-600 text-white'}`}>
+      <div className={`h-6 flex items-center justify-between px-4 text-[10px] shrink-0 transition-colors bg-background border-t border-border text-foreground`}>
         <div className="flex items-center gap-3">
           <span>{files.length} {uiLang === 'en' ? 'files' : '文件'}</span>
           {activeFile && <span>{activeFile.language}</span>}

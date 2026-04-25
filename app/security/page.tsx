@@ -235,7 +235,7 @@ function StepTracker({
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
-                  <span className={`text-sm font-medium ${isDone ? 'text-green-300' : isActive ? 'text-white' : 'text-slate-500'}`}>
+                  <span className={`text-sm font-medium ${isDone ? 'text-green-300' : isActive ? 'text-foreground' : 'text-slate-500'}`}>
                     {step.label}
                   </span>
                   {isDone && <span className="text-xs text-green-500 font-mono">✓ Done</span>}
@@ -255,7 +255,7 @@ function StepTracker({
                   <Zap size={11} /> {showHint ? 'Hide hint' : 'Show command hint'}
                 </button>
                 {showHint && (
-                  <div className="mt-1 px-3 py-2 bg-black/40 border border-red-500/20 rounded-lg">
+                  <div className="mt-1 px-3 py-2 bg-background/40 border border-red-500/20 rounded-lg">
                     <span className="font-mono text-xs text-red-300">$ {step.hint}</span>
                   </div>
                 )}
@@ -317,26 +317,26 @@ export default function SecurityLabPage() {
   const globalProgress = Math.round((completedMissions.length / MISSIONS.length) * 100)
 
   return (
-    <div className="flex flex-col h-screen bg-[#080810] text-white overflow-hidden font-mono">
+    <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden font-mono">
       {/* Scanline overlay */}
       <div className="scanline pointer-events-none" />
 
       {/* Top Bar */}
-      <div className="h-14 border-b border-red-900/30 flex items-center justify-between px-6 bg-[#0a0a14]/90 backdrop-blur-md shrink-0 z-20">
+      <div className="h-14 border-b border-border flex items-center justify-between px-6 bg-background/90 backdrop-blur-md shrink-0 z-20">
         <div className="flex items-center gap-4">
           <Link
             href="/"
-            className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-red-500/20 hover:border-red-500/30 transition-all"
+            className="w-8 h-8 rounded-lg bg-muted border border-border flex items-center justify-center hover:bg-red-500/20 hover:border-red-500/30 transition-all"
           >
             <ArrowLeft size={15} className="text-gray-400" />
           </Link>
-          <div className="h-6 w-px bg-white/10 mx-1" />
+          <div className="h-6 w-px bg-muted-foreground/20 mx-1" />
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center justify-center">
               <ShieldAlert size={16} className="text-red-400" />
             </div>
             <div>
-              <h1 className="text-sm font-bold text-white">Cybersecurity Virtual Lab</h1>
+              <h1 className="text-sm font-bold text-foreground">Cybersecurity Virtual Lab</h1>
               <p className="text-[10px] text-slate-500">Ethical Hacking Training Environment</p>
             </div>
           </div>
@@ -346,7 +346,7 @@ export default function SecurityLabPage() {
         <div className="flex items-center gap-6">
           <div className="hidden md:flex items-center gap-2">
             <div className="text-xs text-slate-500">Progress</div>
-            <div className="w-32 h-1.5 bg-white/10 rounded-full overflow-hidden">
+            <div className="w-32 h-1.5 bg-muted-foreground/20 rounded-full overflow-hidden">
               <div
                 className="h-full bg-gradient-to-r from-red-500 to-orange-500 transition-all duration-700"
                 style={{ width: `${globalProgress}%` }}
@@ -357,7 +357,7 @@ export default function SecurityLabPage() {
           <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all duration-500 ${
             animateXP
               ? 'bg-yellow-500/20 border-yellow-500/40 shadow-[0_0_20px_rgba(234,179,8,0.3)]'
-              : 'bg-white/5 border-white/10'
+              : 'bg-muted border-border'
           }`}>
             <Trophy size={14} className={animateXP ? 'text-yellow-400 animate-spin' : 'text-yellow-500/60'} />
             <span className={`text-sm font-bold transition-colors ${animateXP ? 'text-yellow-400' : 'text-slate-300'}`}>
@@ -382,10 +382,10 @@ export default function SecurityLabPage() {
         <Split className="split" sizes={[38, 62]} minSize={[320, 400]} gutterSize={4}>
 
           {/* ── Sidebar ── */}
-          <div className="h-full flex flex-col bg-gradient-to-b from-[#0d0d1a] to-[#080810] border-r border-red-900/20 overflow-y-auto">
+          <div className="h-full flex flex-col bg-gradient-to-b from-[#1a0505] to-black border-r border-border overflow-y-auto">
 
             {/* Target info */}
-            <div className="p-4 border-b border-white/5">
+            <div className="p-4 border-b border-border">
               <div className="bg-red-500/5 border border-red-500/15 rounded-xl p-3">
                 <div className="flex items-center gap-2 mb-2">
                   <Target size={13} className="text-red-400" />
@@ -429,19 +429,19 @@ export default function SecurityLabPage() {
                         : isDone
                         ? 'bg-green-500/5 border-green-500/20 hover:bg-green-500/10'
                         : isLocked
-                        ? 'bg-white/2 border-white/5 opacity-40 cursor-not-allowed'
+                        ? 'bg-white/2 border-border opacity-40 cursor-not-allowed'
                         : 'bg-white/4 border-white/8 hover:bg-white/8 hover:border-white/15'
                     }`}
                   >
                     <div className="flex items-start gap-3">
                       <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                        isDone ? 'bg-green-500/15' : isActive ? 'bg-red-500/15' : 'bg-white/5'
+                        isDone ? 'bg-green-500/15' : isActive ? 'bg-red-500/15' : 'bg-muted'
                       }`}>
                         {isDone ? <CheckCircle2 className="w-5 h-5 text-green-400" /> : isLocked ? <Lock className="w-4 h-4 text-slate-600" /> : mission.icon}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1 mb-0.5">
-                          <span className={`text-sm font-semibold ${isActive ? 'text-white' : isDone ? 'text-green-300' : 'text-slate-300'}`}>
+                          <span className={`text-sm font-semibold ${isActive ? 'text-foreground' : isDone ? 'text-green-300' : 'text-slate-300'}`}>
                             {mission.title}
                           </span>
                           <span className={`text-[9px] font-bold border rounded px-1.5 py-0.5 ${mission.badgeColor}`}>
@@ -453,7 +453,7 @@ export default function SecurityLabPage() {
                           <span className="text-[10px] text-slate-600">+{mission.xp} XP</span>
                         </div>
                         {!isDone && !isLocked && (
-                          <div className="mt-2 h-1 bg-white/5 rounded-full overflow-hidden">
+                          <div className="mt-2 h-1 bg-muted rounded-full overflow-hidden">
                             <div
                               className="h-full bg-gradient-to-r from-red-500 to-orange-500 transition-all duration-500"
                               style={{ width: `${(stepsDone / mission.steps.length) * 100}%` }}
@@ -469,9 +469,9 @@ export default function SecurityLabPage() {
 
             {/* Active mission steps */}
             {activeMission && (
-              <div className="p-4 border-t border-white/5 flex-1">
+              <div className="p-4 border-t border-border flex-1">
                 <div className="mb-3">
-                  <h3 className="text-xs font-bold text-white mb-0.5">{activeMission.title}</h3>
+                  <h3 className="text-xs font-bold text-foreground mb-0.5">{activeMission.title}</h3>
                   <p className="text-[11px] text-slate-500">{activeMission.description}</p>
                 </div>
                 <div className="mb-3 px-3 py-2 bg-yellow-500/5 border border-yellow-500/15 rounded-lg">
@@ -489,7 +489,7 @@ export default function SecurityLabPage() {
           </div>
 
           {/* ── Terminal ── */}
-          <div className="h-full bg-[#080810] p-4 flex flex-col relative overflow-hidden">
+          <div className="h-full bg-background p-4 flex flex-col relative overflow-hidden">
             {/* Red glow */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(239,68,68,0.04),transparent_60%)] pointer-events-none" />
 

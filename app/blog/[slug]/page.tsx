@@ -66,7 +66,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
           <span className="text-sm text-muted-foreground">Written by</span>
           <span className="font-bold">Unicode Editorial Team</span>
         </div>
-        <button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg transition font-medium">
+        <button className="bg-purple-600 hover:bg-purple-700 text-foreground px-6 py-2 rounded-lg transition font-medium">
           Follow for Updates
         </button>
       </div>

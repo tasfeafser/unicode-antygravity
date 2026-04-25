@@ -110,19 +110,19 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex h-screen bg-[#0A0A0B] text-white overflow-hidden">
+    <div className="flex h-screen bg-background text-foreground overflow-hidden font-inter">
       
       {/* Sidebar (DeepSeek/Gemini Style) */}
-      <div className="w-[260px] bg-[#111] border-r border-white/5 flex flex-col hidden md:flex">
-        <div className="p-4 border-b border-white/5 flex items-center gap-3">
-          <Link href="/" className="w-8 h-8 rounded bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
+      <div className="w-[260px] bg-background/60 backdrop-blur-xl border-r border-border flex flex-col hidden md:flex">
+        <div className="p-4 border-b border-border flex items-center gap-3">
+          <Link href="/" className="w-8 h-8 rounded bg-muted flex items-center justify-center hover:bg-muted-foreground/20 transition-colors">
             <ArrowLeft size={16} className="text-gray-400" />
           </Link>
           <span className="font-semibold text-gray-200">Unicode Chat</span>
         </div>
         
         <div className="p-3">
-          <button className="flex items-center gap-2 w-full px-3 py-2 bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 rounded-lg transition-colors border border-purple-500/20 text-sm font-medium">
+          <button className="flex items-center gap-2 w-full px-3 py-2 bg-[#ef233c]/10 hover:bg-[#ef233c]/20 text-[#ef233c] rounded-lg transition-colors border border-[#ef233c]/20 text-sm font-medium">
             <Plus size={16} /> New Chat
           </button>
         </div>
@@ -130,15 +130,15 @@ export default function ChatPage() {
         <div className="flex-1 overflow-y-auto px-3 py-2">
           <div className="text-xs font-semibold text-gray-500 mb-2 px-1">Recent</div>
           {['Debugging Fibonacci', 'React Hooks Explanation', 'Linux Commands Exam'].map(chat => (
-            <button key={chat} className="w-full text-left px-3 py-2 rounded-lg hover:bg-white/5 text-sm text-gray-300 truncate transition-colors flex items-center gap-2">
+            <button key={chat} className="w-full text-left px-3 py-2 rounded-lg hover:bg-muted text-sm text-gray-300 truncate transition-colors flex items-center gap-2">
               <MessageSquare size={14} className="text-gray-500 shrink-0" />
               {chat}
             </button>
           ))}
         </div>
 
-        <div className="p-4 border-t border-white/5 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-sm font-bold">
+        <div className="p-4 border-t border-border flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#ef233c] to-red-700 flex items-center justify-center text-sm font-bold">
             {user?.firstName?.charAt(0) || 'U'}
           </div>
           <div className="text-sm font-medium">{user?.firstName || 'User'}</div>
@@ -148,8 +148,8 @@ export default function ChatPage() {
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col relative">
         {/* Mobile Header */}
-        <div className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-white/5 bg-[#111]">
-          <Link href="/" className="w-8 h-8 rounded bg-white/5 flex items-center justify-center">
+        <div className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-border bg-background/60 backdrop-blur-xl">
+          <Link href="/" className="w-8 h-8 rounded bg-muted flex items-center justify-center">
              <ArrowLeft size={16} className="text-gray-400" />
           </Link>
           <span className="font-semibold px-2">Unicode Chat</span>
@@ -160,8 +160,8 @@ export default function ChatPage() {
           <div className="max-w-3xl mx-auto flex flex-col gap-8">
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center mt-20 text-center animate-fade-in-up">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-2xl flex items-center justify-center mb-6 border border-white/10 shadow-[0_0_50px_rgba(168,85,247,0.15)]">
-                  <Sparkles size={32} className="text-purple-400" />
+                <div className="w-16 h-16 bg-gradient-to-br from-[#ef233c]/20 to-red-800/20 rounded-2xl flex items-center justify-center mb-6 border border-border shadow-[0_0_50px_rgba(239,35,60,0.15)]">
+                  <Sparkles size={32} className="text-[#ef233c]" />
                 </div>
                 <h1 className="text-3xl font-bold mb-4">Hello, {user?.firstName || 'Developer'}</h1>
                 <p className="text-gray-400 max-w-md">I am Unicode, your Academic Co-Pilot. I can help explain code, debug issues, or guide you through Linux.</p>
@@ -171,7 +171,7 @@ export default function ChatPage() {
                     <button 
                       key={suggestion}
                       onClick={() => { setInput(suggestion); document.getElementById('chat-input')?.focus() }}
-                      className="p-3 text-sm text-left bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] rounded-xl text-gray-300 transition-colors"
+                      className="p-3 text-sm text-left bg-white/[0.02] border border-border hover:bg-white/[0.05] rounded-xl text-gray-300 transition-colors"
                     >
                       {suggestion}
                     </button>
@@ -182,13 +182,13 @@ export default function ChatPage() {
               messages.map(msg => (
                 <div key={msg.id} className={`flex gap-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   {msg.role === 'assistant' && (
-                    <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center border border-purple-500/30 shrink-0 mt-1">
-                      <Sparkles size={14} className="text-purple-400" />
+                    <div className="w-8 h-8 rounded-full bg-[#ef233c]/20 flex items-center justify-center border border-[#ef233c]/30 shrink-0 mt-1">
+                      <Sparkles size={14} className="text-[#ef233c]" />
                     </div>
                   )}
                   <div className={`max-w-[85%] rounded-2xl px-5 py-3.5 leading-relaxed ${
                     msg.role === 'user' 
-                      ? 'bg-[#1E1E2E] text-white border border-white/5' 
+                      ? 'bg-[#1E1E2E] text-foreground border border-border' 
                       : 'bg-transparent text-gray-200 prose prose-invert max-w-none'
                   }`}>
                     {msg.role === 'assistant' ? (
@@ -205,20 +205,20 @@ export default function ChatPage() {
         </div>
 
         {/* Input Dock */}
-        <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-[#0A0A0B] via-[#0A0A0B] to-transparent pt-10 pb-6 px-4">
+        <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black via-black/80 to-transparent pt-10 pb-6 px-4">
           <div className="max-w-3xl mx-auto relative group">
             {/* Model & API Setup bar */}
             {showSettings && (
-              <div className="absolute bottom-[100%] mb-2 left-0 w-full p-3 rounded-2xl bg-[#111] border border-white/10 shadow-2xl flex flex-col gap-3 animate-fade-in-up">
+              <div className="absolute bottom-[100%] mb-2 left-0 w-full p-3 rounded-2xl bg-background/80 backdrop-blur-xl border border-border shadow-2xl flex flex-col gap-3 animate-fade-in-up">
                 <div className="flex items-center justify-between text-sm">
                   <span className="font-semibold text-gray-300">AI Model Setup</span>
-                  <button onClick={() => setShowSettings(false)} className="text-gray-500 hover:text-white"><X size={16}/></button>
+                  <button onClick={() => setShowSettings(false)} className="text-gray-500 hover:text-foreground"><X size={16}/></button>
                 </div>
                 <div className="flex gap-2">
                   <select 
                     value={selectedModel} 
                     onChange={e => setSelectedModel(e.target.value)}
-                    className="flex-1 bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-gray-300 focus:outline-none"
+                    className="flex-1 bg-muted border border-border rounded-lg p-2 text-sm text-gray-300 focus:outline-none"
                   >
                     <option value="unicode-default">Unicode Default (Groq)</option>
                     <option value="gemini-vision">Gemini 1.5 Vision</option>
@@ -232,7 +232,7 @@ export default function ChatPage() {
                     value={customKey}
                     onChange={e => setCustomKey(e.target.value)}
                     placeholder="Enter API Key"
-                    className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-sm text-gray-300 focus:outline-none font-mono"
+                    className="w-full bg-muted border border-border rounded-lg p-2 text-sm text-gray-300 focus:outline-none font-mono"
                   />
                 </div>
               </div>
@@ -240,17 +240,17 @@ export default function ChatPage() {
 
             <form 
               onSubmit={handleSend}
-              className="relative bg-[#18181B] border border-white/10 focus-within:border-purple-500/50 focus-within:ring-1 focus-within:ring-purple-500/50 rounded-2xl flex flex-col shadow-2xl transition-all"
+              className="relative bg-background/60 backdrop-blur-xl border border-border focus-within:border-[#ef233c]/50 focus-within:ring-1 focus-within:ring-[#ef233c]/50 rounded-2xl flex flex-col shadow-2xl transition-all"
             >
               {/* Image Preview Area */}
               {uploadedImage && (
-                <div className="px-4 pt-4 pb-2 border-b border-white/5 relative">
+                <div className="px-4 pt-4 pb-2 border-b border-border relative">
                   <div className="relative inline-block">
-                    <img src={uploadedImage} alt="Uploaded" className="h-16 w-16 object-cover rounded-lg border border-white/10" />
+                    <img src={uploadedImage} alt="Uploaded" className="h-16 w-16 object-cover rounded-lg border border-border" />
                     <button 
                       type="button"
                       onClick={() => setUploadedImage(null)}
-                      className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg"
+                      className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-foreground rounded-full flex items-center justify-center shadow-lg"
                     >
                       <X size={12} />
                     </button>
@@ -270,14 +270,14 @@ export default function ChatPage() {
                   <button 
                     type="button" 
                     onClick={() => fileInputRef.current?.click()}
-                    className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors shrink-0"
+                    className="p-2 text-gray-400 hover:text-foreground hover:bg-muted rounded-xl transition-colors shrink-0"
                   >
                     <ImageIcon size={20} />
                   </button>
                   <button 
                     type="button"
                     onClick={() => setShowSettings(!showSettings)} 
-                    className={`p-2 rounded-xl transition-colors shrink-0 ${showSettings ? 'bg-purple-500/20 text-purple-400' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                    className={`p-2 rounded-xl transition-colors shrink-0 ${showSettings ? 'bg-[#ef233c]/20 text-[#ef233c]' : 'text-gray-400 hover:text-foreground hover:bg-muted'}`}
                   >
                     <Settings2 size={20} />
                   </button>
@@ -292,7 +292,7 @@ export default function ChatPage() {
                   }
                 }}
                 placeholder="Message Unicode AI..."
-                className="flex-1 max-h-48 min-h-[56px] bg-transparent border-none text-white focus:outline-none resize-none py-4 px-2 placeholder-gray-500 placeholder:text-[15px]"
+                className="flex-1 max-h-48 min-h-[56px] bg-transparent border-none text-foreground focus:outline-none resize-none py-4 px-2 placeholder-gray-500 placeholder:text-[15px]"
                 rows={1}
                 style={{ height: input ? 'auto' : '56px' }}
               />
