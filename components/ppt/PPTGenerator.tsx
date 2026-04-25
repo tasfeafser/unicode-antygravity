@@ -271,7 +271,7 @@ export function PPTGenerator() {
           x: 0, y: 0, w: 0.08, h: 5.63, fill: { color: 'a855f7' }
         })
         slide.addShape(prs.ShapeType.rect, {
-          x: 0, y: 5.3, w: 10, h: 0.04, fill: { color: '7c3aed' }, transparency: 60
+          x: 0, y: 5.3, w: 10, h: 0.04, fill: { color: '7c3aed' }
         })
 
         // Slide number
@@ -291,7 +291,7 @@ export function PPTGenerator() {
           slide.addText(bullet, {
             x: 0.6, y: 1.6 + bi * 0.65, w: 8.8, h: 0.55,
             fontSize: 13, color: 'c4b5fd',
-            bullet: { type: 'bullet', color: 'a855f7' },
+            bullet: { type: 'bullet' },
             fontFace: 'Arial'
           })
         })

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useUser, UserButton, SignInButton, SignUpButton } from '@clerk/nextjs'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
     ArrowRight, Bot, Code2, Layers, Star, User, Check, Github, Terminal,
     ShieldAlert, Cpu, BookOpen, BrainCircuit, FileText, Grid3X3, Gamepad2
@@ -78,7 +79,7 @@ function DarkRedNoirHome() {
             <header className="fixed top-0 left-0 w-full z-50 pt-6 px-4">
                 <nav className="max-w-5xl mx-auto flex items-center justify-between bg-background/60 backdrop-blur-xl border border-border rounded-full px-6 py-3 shadow-2xl">
                     <div className="flex items-center gap-2">
-                        <div className="w-5 h-5 bg-[#ef233c] rounded-sm rotate-45"></div>
+                        <Image src="/logo.png" alt="Unicode" width={28} height={28} className="rounded-md" />
                         <span className="text-lg font-bold font-manrope tracking-tight">Unicode</span>
                     </div>
 
@@ -294,7 +295,7 @@ function DarkRedNoirHome() {
                                 />
                             </Link>
 
-                            <Link href="/game-builder" className="block w-full h-full">
+                            <Link href="https://rosebud.ai/#create-from-scratch-section" target="_blank" className="block w-full h-full">
                                 <FeatureCard
                                     prompt="Unigame"
                                     title="Game Dev"
@@ -431,7 +432,7 @@ function DarkRedNoirHome() {
                 <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 mb-24 relative z-10">
                     <div className="md:col-span-2">
                         <div className="flex items-center gap-2 mb-6">
-                            <div className="w-5 h-5 bg-[#ef233c] rounded-sm rotate-45"></div>
+                            <Image src="/logo.png" alt="Unicode" width={28} height={28} className="rounded-md" />
                             <span className="text-2xl font-bold font-manrope tracking-tight">Unicode</span>
                         </div>
                         <p className="text-muted-foreground max-w-xs leading-relaxed">Pioneering the future of computer science education with artificial intelligence and hands-on environments.</p>

@@ -2,6 +2,7 @@
 
 import { useUser, UserButton, SignInButton, SignUpButton } from '@clerk/nextjs'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ThemeSwitch } from '@/components/ui/ThemeSwitch'
 import { LanguageToggle } from '@/components/ui/LanguageToggle'
 import { ArrowRight, Bot, Code2, ShieldAlert } from 'lucide-react'
@@ -44,6 +45,7 @@ export function LightNeoBrutalistHome() {
         <div className="fixed top-0 left-0 w-full z-50 pt-4 px-4">
             <nav className="max-w-7xl mx-auto flex items-center justify-between bg-[#F8F4E8]/90 backdrop-blur-xl border-2 border-[#09090B] rounded-xl px-6 py-4" style={{ boxShadow: '4px 4px 0px 0px #09090B' }}>
                 <div className="flex items-center gap-2">
+                    <Image src="/logo.png" alt="Unicode" width={32} height={32} className="rounded-md" />
                     <span className="text-2xl font-dela tracking-tighter uppercase glitch-hover">Unicode</span>
                 </div>
                 
@@ -212,17 +214,17 @@ export function LightNeoBrutalistHome() {
                         </div>
                     </Link>
 
-                    {/* Item 3 (Sold Out) */}
-                    <div className="shrink-0 w-[320px] grayscale opacity-60 pointer-events-none">
+                    {/* Item 3 */}
+                    <Link href="https://rosebud.ai/#create-from-scratch-section" target="_blank" className="shrink-0 w-[320px] group" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
                         <div className="w-full aspect-square border-2 border-[#09090B] bg-white mb-4 relative overflow-hidden" style={{ boxShadow: '8px 8px 0px 0px #09090B' }}>
-                            <h3 className="absolute inset-0 flex items-center justify-center font-dela text-4xl uppercase">Game Dev</h3>
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#09090B] text-white px-4 py-2 font-bold uppercase rotate-12">Coming Soon</div>
+                            <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(#09090B_2px,transparent_2px)] bg-[size:16px_16px] opacity-20"></div>
+                            <h3 className="absolute inset-0 flex items-center justify-center font-dela text-4xl uppercase rotate-[12deg]">Game Dev</h3>
                         </div>
                         <div className="flex justify-between items-center font-bold uppercase border-2 border-[#09090B] p-2 bg-zinc-300">
                             <span>Unigame Engine</span>
-                            <span>N/A</span>
+                            <span>v1.0</span>
                         </div>
-                    </div>
+                    </Link>
                 </div>
             </section>
         </main>
